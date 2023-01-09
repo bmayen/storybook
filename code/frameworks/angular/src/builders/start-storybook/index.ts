@@ -6,11 +6,7 @@ import {
   targetFromTargetString,
 } from '@angular-devkit/architect';
 import { JsonObject } from '@angular-devkit/core';
-import {
-  BrowserBuilderOptions,
-  ExtraEntryPoint,
-  StylePreprocessorOptions,
-} from '@angular-devkit/build-angular';
+import { BrowserBuilderOptions, StylePreprocessorOptions } from '@angular-devkit/build-angular';
 import { from, Observable, of } from 'rxjs';
 import { CLIOptions } from '@storybook/types';
 import { map, switchMap, mapTo } from 'rxjs/operators';
@@ -18,6 +14,7 @@ import { sync as findUpSync } from 'find-up';
 import { sync as readUpSync } from 'read-pkg-up';
 
 import { buildDevStandalone } from '@storybook/core-server';
+import { StyleElement } from '@angular-devkit/build-angular/src/builders/browser/schema';
 import { StandaloneOptions } from '../utils/standalone-options';
 import { runCompodoc } from '../utils/run-compodoc';
 import { buildStandaloneErrorHandler } from '../utils/build-standalone-errors-handler';
@@ -27,7 +24,7 @@ export type StorybookBuilderOptions = JsonObject & {
   tsConfig?: string;
   compodoc: boolean;
   compodocArgs: string[];
-  styles?: ExtraEntryPoint[];
+  styles?: StyleElement[];
   stylePreprocessorOptions?: StylePreprocessorOptions;
 } & Pick<
     // makes sure the option exists
@@ -106,8 +103,8 @@ function commandBuilder(
       return standaloneOptions;
     }),
     switchMap((standaloneOptions) => runInstance(standaloneOptions)),
-    map(() => {
-      return { success: true };
+    map(({ port }) => {
+      return { success: true, info: { port } };
     })
   );
 }
@@ -132,10 +129,10 @@ async function setup(options: StorybookBuilderOptions, context: BuilderContext) 
   };
 }
 function runInstance(options: StandaloneOptions) {
-  return new Observable<void>((observer) => {
+  return new Observable<{ port: number }>((observer) => {
     // This Observable intentionally never complete, leaving the process running ;)
     buildDevStandalone(options as any).then(
-      () => observer.next(),
+      ({ port }) => observer.next({ port }),
       (error) => observer.error(buildStandaloneErrorHandler(error))
     );
   });

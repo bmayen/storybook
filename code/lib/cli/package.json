@@ -21,6 +21,18 @@
     "url": "https://opencollective.com/storybook"
   },
   "license": "MIT",
+  "exports": {
+    ".": {
+      "node": "./dist/index.js",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "author": "Storybook Team",
   "bin": {
     "getstorybook": "./bin/index.js",
@@ -97,7 +109,8 @@
   },
   "bundler": {
     "entries": [
-      "./src/generate.ts"
+      "./src/generate.ts",
+      "./src/index.ts"
     ],
     "platform": "node"
   },

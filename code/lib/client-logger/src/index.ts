@@ -1,5 +1,6 @@
 import { global } from '@storybook/global';
 
+// @ts-ignore
 const { LOGLEVEL } = global;
 
 type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'silent';
@@ -20,22 +21,34 @@ type LoggingFn = (message: any, ...args: any[]) => void;
 
 export const logger = {
   trace: (message: any, ...rest: any[]): void => {
-    if (currentLogLevelNumber <= levels.trace) console.trace(message, ...rest);
+    if (currentLogLevelNumber <= levels.trace) {
+      console.trace(message, ...rest);
+    }
   },
   debug: (message: any, ...rest: any[]): void => {
-    if (currentLogLevelNumber <= levels.debug) console.debug(message, ...rest);
+    if (currentLogLevelNumber <= levels.debug) {
+      console.debug(message, ...rest);
+    }
   },
   info: (message: any, ...rest: any[]): void => {
-    if (currentLogLevelNumber <= levels.info) console.info(message, ...rest);
+    if (currentLogLevelNumber <= levels.info) {
+      console.info(message, ...rest);
+    }
   },
   warn: (message: any, ...rest: any[]): void => {
-    if (currentLogLevelNumber <= levels.warn) console.warn(message, ...rest);
+    if (currentLogLevelNumber <= levels.warn) {
+      console.warn(message, ...rest);
+    }
   },
   error: (message: any, ...rest: any[]): void => {
-    if (currentLogLevelNumber <= levels.error) console.error(message, ...rest);
+    if (currentLogLevelNumber <= levels.error) {
+      console.error(message, ...rest);
+    }
   },
   log: (message: any, ...rest: any[]): void => {
-    if (currentLogLevelNumber < levels.silent) console.log(message, ...rest);
+    if (currentLogLevelNumber < levels.silent) {
+      console.log(message, ...rest);
+    }
   },
 } as const;
 
